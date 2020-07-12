@@ -117,7 +117,7 @@ void Ball::update(Time dt, ofstream &iFile)
 	m_Position.y += m_DirectionY * m_Speed * dt.asSeconds();
 
 	iFile << "Ball position after update: " << m_Position.x << ", "
-		  << m_Position.y << endl;
+			<< m_Position.y << endl;
 
 	// Move the ball and the bat
 	m_Shape.setPosition(m_Position);

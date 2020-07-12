@@ -8,7 +8,7 @@
 	"C_Cpp.enhancedColorization": "Disabled",
 	"debug.toolBarLocation": "docked",
 	"editor.fontFamily": "'Ubuntu Mono', 'Courier Prime Code', 'Courier', 'Courier New', Consolas, monospace",
-	"editor.tabSize": 4,
+	"editor.tabSize": 3,
 	"editor.insertSpaces": false,
 	"editor.formatOnSave": true,
 	"files.encoding": "utf8",

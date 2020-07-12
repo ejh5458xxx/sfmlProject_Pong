@@ -14,7 +14,8 @@ int main()
 {
 	ofstream myfile;
 	myfile.open("Pong.txt");
-	myfile << "*** Start of Program ***" << endl;
+	if (myfile.is_open())
+		myfile << "*** Start of Program ***" << endl;
 	// Create a video mode object
 	VideoMode vm(1920, 1080);
 

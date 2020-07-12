@@ -1,12 +1,20 @@
 // Pong.cpp : Defines the entry point for the console application.
 //
 #include "Bat.h"
+#include "Ball.h"
 #include <sstream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
 
+#include <fstream>
+#include <iostream>
+using namespace std;
+
 int main()
 {
+	ofstream myfile;
+	myfile.open("Pong.txt");
+	myfile << "*** Start of Program ***" << endl;
 	// Create a video mode object
 	VideoMode vm(1920, 1080);
 
@@ -20,7 +28,8 @@ int main()
 	// Create a bat
 	Bat bat(1920 / 2, 1080 - 20);
 
-	// We will add a ball in the next chapter
+	// Create a ball
+	Ball ball(1920 / 2, 0);
 
 	// Create a Text object called HUD
 	Text hud;
@@ -94,11 +103,65 @@ int main()
 		// Update the delta time
 		Time dt = clock.restart();
 		bat.update(dt);
+		ball.update(dt, myfile);
 		// Update the HUD text
 		std::stringstream ss;
 		ss << "Score:" << score << "    Lives:" << lives;
 		hud.setString(ss.str());
 
+		// Handle ball hitting the bottom
+		if (ball.getPosition().top > window.getSize().y)
+		{
+			myfile << "*** Ball hitting bottom ***" << endl;
+
+			//ball.reboundBottom(myfile);
+			ball.hitBottom(myfile);
+
+			// Remove a life
+			lives--;
+
+			// Check for zero lives
+			if (lives < 1)
+			{
+				// reset the score
+				score = 0;
+				// reset the lives
+				lives = 3;
+			}
+		}
+
+		// Handle ball hitting top
+		if (ball.getPosition().top < 0)
+		{
+			myfile << "*** Ball hitting top ***" << endl;
+			//ball.reboundBatOrTop(myfile);
+			ball.reboundTop(myfile);
+
+			// Add a point to the players score
+			score++;
+			myfile << "score = " << score << endl;
+		}
+
+		// Handle ball hitting sides
+		if (ball.getPosition().left < 0)
+		{
+			myfile << "*** Ball hitting left side ***" << endl;
+			ball.reboundLeftSide(myfile);
+		}
+		else if (ball.getPosition().left + 10 > window.getSize().x)
+		{
+			myfile << "*** Ball hitting right side ***" << endl;
+			ball.reboundRightSide(myfile);
+		}
+
+		// Has the ball hit the bat?
+		if (ball.getPosition().intersects(bat.getPosition()))
+		{
+			myfile << "*** Ball intersects Bat ***" << endl;
+			// Hit detected so reverse the ball
+			// Hit will be scored once this ball hits the top.
+			ball.reboundBat(myfile);
+		}
 		/*
 		Draw the bat, the ball and the HUD
 		*********************************************************************
@@ -108,8 +171,11 @@ int main()
 		window.clear();
 		window.draw(hud);
 		window.draw(bat.getShape());
+		window.draw(ball.getShape());
 		window.display();
 	}
 
+	myfile << "*** End of Program ***" << endl;
+	myfile.close();
 	return 0;
 }

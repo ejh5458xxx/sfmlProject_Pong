@@ -5,6 +5,7 @@
 #include <sstream>
 #include <cstdlib>
 #include <SFML/Graphics.hpp>
+#include <SFML/Audio.hpp>
 
 #include <fstream>
 #include <iostream>
@@ -31,6 +32,17 @@ int main()
 
 	// Create a ball
 	Ball ball(1920 / 2, 0);
+
+	// Prepare the sounds of ball colliding with bat or sides
+	SoundBuffer ballHitSidesBuffer;
+	ballHitSidesBuffer.loadFromFile("sound/Hit_A_Ball.wav");
+	Sound ballHitSides;
+	ballHitSides.setBuffer(ballHitSidesBuffer);
+
+	SoundBuffer ballHitBatBuffer;
+	ballHitBatBuffer.loadFromFile("sound/ball.wav");
+	Sound ballHitBat;
+	ballHitBat.setBuffer(ballHitBatBuffer);
 
 	// Create a Text object called HUD
 	Text hud;
@@ -141,6 +153,7 @@ int main()
 			// Add a point to the players score
 			score++;
 			myfile << "score = " << score << endl;
+			ballHitSides.play();
 		}
 
 		// Handle ball hitting sides
@@ -148,11 +161,13 @@ int main()
 		{
 			myfile << "*** Ball hitting left side ***" << endl;
 			ball.reboundLeftSide(myfile);
+			ballHitSides.play();
 		}
 		else if (ball.getPosition().left + 10 > window.getSize().x)
 		{
 			myfile << "*** Ball hitting right side ***" << endl;
 			ball.reboundRightSide(myfile);
+			ballHitSides.play();
 		}
 
 		// Has the ball hit the bat?
@@ -162,6 +177,7 @@ int main()
 			// Hit detected so reverse the ball
 			// Hit will be scored once this ball hits the top.
 			ball.reboundBat(myfile);
+			ballHitBat.play();
 		}
 		/*
 		Draw the bat, the ball and the HUD

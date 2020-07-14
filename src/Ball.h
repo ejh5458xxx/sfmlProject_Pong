@@ -12,6 +12,7 @@ private:
 	RectangleShape m_Shape;
 
 	float m_Speed = 1000.0f;
+	const float MAX_SPEED = 3000.0f;
 	float m_DirectionX = .2f;
 	float m_DirectionY = .2f;
 

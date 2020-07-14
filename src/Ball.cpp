@@ -72,7 +72,7 @@ void Ball::reboundBat(ofstream &iFile)
 	iFile << "--> Ball::reboundBat" << endl;
 	iFile << "getPosition().left = " << getPosition().left << endl;
 	iFile << "getPosition().top = " << getPosition().top << endl;
-	m_DirectionY = -0.2f;
+	m_DirectionY = -1.0f * abs(m_DirectionY);
 	iFile << "m_DirectionY = " << m_DirectionY << endl;
 	iFile << "<-- Ball::reboundBat" << endl;
 }
@@ -82,21 +82,26 @@ void Ball::reboundTop(ofstream &iFile)
 	iFile << "--> Ball::reboundTop" << endl;
 	iFile << "getPosition().left = " << getPosition().left << endl;
 	iFile << "getPosition().top = " << getPosition().top << endl;
-	m_DirectionY = 0.2f;
+	m_DirectionY = abs(m_DirectionY);
 	// Set y position of ball to zero because if it's currently negative,
 	// it could stay negative for a while and mess up the scoring
 	m_Position.y = 0;
 	iFile << "m_DirectionY = " << m_DirectionY << endl;
 	iFile << "m_Position.y set to 0" << endl;
+	m_Speed = m_Speed * 1.10f;
+	if (m_Speed >= MAX_SPEED)
+		m_Speed = MAX_SPEED;
+	iFile << "m_Speed = " << m_Speed << endl;
 	iFile << "<-- Ball::reboundTop" << endl;
 }
 
 void Ball::hitBottom(ofstream &iFile)
 {
 	iFile << "--> Ball::hitBottom" << endl;
-	m_DirectionY = 0.2f;
+	m_DirectionY = abs(m_DirectionY);
 	m_Position.y = 0;
 	m_Position.x = 500;
+	m_Speed = 1000.0f;
 	iFile << "<-- Ball::hitBottom" << endl;
 }
 
